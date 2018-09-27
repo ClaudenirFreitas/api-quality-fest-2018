@@ -1,0 +1,17 @@
+*.class
+*.ear
+*.jar
+*.css
+
+#folders
+bin
+build
+target
+dist
+.idea
+.settings
+src/test/appHome/logs
+/target/
+/target/*.war
+.project
+.classpath
