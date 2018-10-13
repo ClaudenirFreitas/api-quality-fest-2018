@@ -19,12 +19,12 @@ public class TaskRequestDTO implements Serializable {
 
 	@ApiModelProperty(value = "Nome", required = true)
 	@NotNull(message = "Nome obrigatório")
-	@Length(min = 5, max = 50, message = "Local de Destino deve estar entre 3 e 40 caracteres")
+	@Length(min = 1, max = 50, message = "Nome deve estar entre 1 e 50 caracteres")
 	private String nome;
 
 	@ApiModelProperty(value = "Descrição", required = true)
 	@NotNull(message = "Descrição obrigatória")
-	@Length(min = 5, max = 50, message = "Local de Destino deve estar entre 3 e 40 caracteres")
+	@Length(min = 1, max = 50, message = "Descricao deve estar entre 1 e 50 caracteres")
 	private String descricao;
 
 	@ApiModelProperty(value = "Prioridade", required = true)

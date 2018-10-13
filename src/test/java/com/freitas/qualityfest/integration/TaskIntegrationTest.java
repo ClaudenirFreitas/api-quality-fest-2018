@@ -16,7 +16,7 @@ import com.freitas.qualityfest.repositories.TaskRepository;
 
 @DataJpaTest
 @RunWith(SpringRunner.class)
-public class TaskIntegration {
+public class TaskIntegrationTest {
 
 	@Autowired
 	private TestEntityManager entityManager;

@@ -1,0 +1,268 @@
+{
+	"info": {
+		"_postman_id": "11d49560-0170-46fe-8506-44c7b9f5b43d",
+		"name": "Task API",
+		"description": "API criada para fins de apresentação no GDG Quality Fest 2018",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "tasks",
+			"item": [
+				{
+					"name": "Fakerator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "2401dd16-dad0-42df-8a9d-d599493a7ba3",
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"",
+									"    pm.response.to.have.status(200);",
+									"    pm.globals.set(\"fakerator\", responseBody);",
+									"",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "https://rawgit.com/icebob/fakerator/master/dist/fakerator.min.js",
+							"protocol": "https",
+							"host": [
+								"rawgit",
+								"com"
+							],
+							"path": [
+								"icebob",
+								"fakerator",
+								"master",
+								"dist",
+								"fakerator.min.js"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Criar uma nova task",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "b9576dec-b144-4d8e-bf1d-20aea125c37b",
+								"exec": [
+									"eval(pm.globals.get('fakerator'));",
+									"",
+									"const faker = this.Fakerator();",
+									"",
+									"pm.variables.set('nome', faker.names.firstName());",
+									"pm.variables.set('descricao', faker.names.firstNameM());",
+									"pm.variables.set('prioridade', faker.random.arrayElement(['BAIXA', 'MEDIA', 'ALTA']));"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "98b4019f-d6fa-4acd-ba45-0c9ea857c324",
+								"exec": [
+									"pm.test('Status code is 201', () => pm.response.to.have.status(201));",
+									"",
+									"pm.test(\"Content-Type is present\", () => pm.response.to.have.header(\"Location\"));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"descricao\": \"{{descricao}}\",\n\t\"nome\": \"{{nome}}\",\n\t\"prioridade\": \"{{prioridade}}\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8089/api/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retorna todas as tasks cadastradas",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f605bd0d-9b00-4b3d-8335-ac035fb2e828",
+								"exec": [
+									"const body = pm.response.json();",
+									"",
+									"const filterByType = (data, filter) => data.filter(i => i.prioridade === filter);",
+									"",
+									"const baixa = filterByType(body, 'BAIXA');",
+									"const media = filterByType(body, 'MEDIA');",
+									"const alta = filterByType(body, 'ALTA');"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "{{host}}/api/tasks",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"api",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retorna a task com base no identificador",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8089/api/tasks/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"tasks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza a task com base no identificador",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "taskDTO"
+						},
+						"url": {
+							"raw": "http://localhost:8089/api/tasks/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"tasks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Remove a task com base no identificador",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"body": {},
+						"url": {
+							"raw": "http://localhost:8089/api/tasks/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8089",
+							"path": [
+								"api",
+								"tasks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "{{id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Folder for tasks"
+		}
+	]
+}

@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.freitas.qualityfest.entities.Task;
 import com.freitas.qualityfest.enums.Prioridade;
-import com.freitas.qualityfest.exceptions.PrioridadeFinalizadaException;
+import com.freitas.qualityfest.exceptions.PrioridadeAltaException;
 import com.freitas.qualityfest.repositories.TaskRepository;
 import com.freitas.qualityfest.services.ITaskService;
 import com.freitas.qualityfest.services.impl.TaskService;
@@ -65,7 +65,7 @@ public class TaskServiceTest {
 
 	}
 
-	@Test(expected = PrioridadeFinalizadaException.class)
+	@Test(expected = PrioridadeAltaException.class)
 	public void atualizandoTaskComPrioridadeFinalizada() throws Exception {
 		
 		// create mock
@@ -103,7 +103,7 @@ public class TaskServiceTest {
 
 			taskService.salvar(task);
 
-		} catch (PrioridadeFinalizadaException ex) {
+		} catch (PrioridadeAltaException ex) {
 
 			Assert.assertEquals("Validando mensagem", "Prioridade com status finalizada", ex.getMessage());
 

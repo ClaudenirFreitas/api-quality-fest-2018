@@ -34,7 +34,8 @@ public class SwaggerConfiguration extends WebMvcConfigurerAdapter {
 				                                      .apis(RequestHandlerSelectors.any())
 				                                      .paths(paths())
 				                                      .build()
-				                                      .apiInfo(apiInfo());
+				                                      .apiInfo(apiInfo())
+				                                      .useDefaultResponseMessages(false);
 	}
 
 	private ApiInfo apiInfo() {

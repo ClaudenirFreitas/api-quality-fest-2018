@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.freitas.qualityfest.entities.Task;
 import com.freitas.qualityfest.enums.Prioridade;
-import com.freitas.qualityfest.exceptions.PrioridadeFinalizadaException;
+import com.freitas.qualityfest.exceptions.PrioridadeAltaException;
 import com.freitas.qualityfest.repositories.TaskRepository;
 import com.freitas.qualityfest.services.ITaskService;
 
@@ -22,6 +22,7 @@ public class TaskService implements ITaskService {
 	@Autowired
 	private TaskRepository taskRepository;
 
+	@Override
 	public List<Task> listar() {
 
 		List<Task> tasks = taskRepository.findAll();
@@ -43,7 +44,7 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
-	public Task salvar(final Task task) throws PrioridadeFinalizadaException {
+	public Task salvar(final Task task) throws PrioridadeAltaException {
 
 		LOGGER.info("Salvando a task: " + task);
 
@@ -56,6 +57,13 @@ public class TaskService implements ITaskService {
 	}
 
 	@Override
+	public void excluir(Long id) {
+
+		taskRepository.delete(id);
+		
+	}
+	
+	@Override
 	public boolean exists(final Long id) {
 
 		boolean exists = taskRepository.exists(id);
@@ -66,7 +74,7 @@ public class TaskService implements ITaskService {
 
 	}
 
-	private Task criar(final Task task) throws PrioridadeFinalizadaException {
+	private Task criar(final Task task) throws PrioridadeAltaException {
 
 		validar(task);
 
@@ -81,7 +89,7 @@ public class TaskService implements ITaskService {
 		return t;
 	}
 
-	private Task update(final Task task) throws PrioridadeFinalizadaException {
+	private Task update(final Task task) throws PrioridadeAltaException {
 
 		Task taskDB = taskRepository.findOne(task.getId());
 
@@ -97,10 +105,10 @@ public class TaskService implements ITaskService {
 
 	}
 
-	private void validar(final Task task) throws PrioridadeFinalizadaException {
+	private void validar(final Task task) throws PrioridadeAltaException {
 
-		if (Prioridade.ALTA.equals(task.getPrioridade())) {
-			throw new PrioridadeFinalizadaException();
+		if (Objects.nonNull(task.getId()) && Prioridade.ALTA.equals(task.getPrioridade())) {
+			throw new PrioridadeAltaException();
 		}
 
 	}

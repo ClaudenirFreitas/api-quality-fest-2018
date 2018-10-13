@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +26,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.freitas.qualityfest.dtos.TaskRequestDTO;
 import com.freitas.qualityfest.dtos.TaskResponseDTO;
 import com.freitas.qualityfest.entities.Task;
-import com.freitas.qualityfest.exceptions.PrioridadeFinalizadaException;
+import com.freitas.qualityfest.exceptions.PrioridadeAltaException;
 import com.freitas.qualityfest.services.ITaskService;
 
 import io.swagger.annotations.Api;
@@ -82,7 +83,7 @@ public class TaskController {
 		@ApiResponse(code = 201, message = "Task criada com sucesso"),
 		@ApiResponse(code = 422, message = "Task inválida") 
 	})
-	public ResponseEntity<TaskResponseDTO> criar(@Valid @RequestBody TaskRequestDTO taskDTO, BindingResult result) throws PrioridadeFinalizadaException {
+	public ResponseEntity<TaskResponseDTO> criar(@Valid @RequestBody TaskRequestDTO taskDTO, BindingResult result) throws PrioridadeAltaException {
 
 		if (result.hasErrors()) {
 			Set<String> erros = result.getAllErrors()
@@ -116,7 +117,7 @@ public class TaskController {
 	})
 	public ResponseEntity<TaskResponseDTO> atualizar(@ApiParam(value = "ID da task", required = true) @PathVariable("id") Long id,
 			                                         @Valid @RequestBody TaskRequestDTO taskDTO, 
-			                                         BindingResult result) throws PrioridadeFinalizadaException {
+			                                         BindingResult result) throws PrioridadeAltaException {
 		
 		if (result.hasErrors()) {
 			Set<String> erros = result.getAllErrors()
@@ -143,4 +144,25 @@ public class TaskController {
 
 	}
 	
+	@DeleteMapping(path = "/{id}")
+	@ApiOperation(value = "Remove a task com base no identificador", response = Void.class, nickname = "excluir")
+	@ApiResponses(value = { 
+		@ApiResponse(code = 204, message = "Task removida com sucesso"),
+		@ApiResponse(code = 404, message = "Task não localizada") 
+	})
+	public ResponseEntity<Void> excluir(@ApiParam(value = "ID da task", required = true) @PathVariable("id") Long id) {
+
+		boolean exists = taskService.exists(id);
+
+		if (exists) {
+
+			taskService.excluir(id);
+			ResponseEntity.noContent().build();
+		
+		}
+
+		return ResponseEntity.notFound().build();
+
+	}
+
 }
