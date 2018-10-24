@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.freitas.qualityfest.entities.Task;
 import com.freitas.qualityfest.enums.Prioridade;
@@ -17,19 +18,20 @@ public class TaskResponseDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@ApiModelProperty(value = "Identificador da Task")
+	@ApiModelProperty(value = "Identificador da Task", required = true)
 	private Long id;
 
-	@ApiModelProperty(value = "Nome")
+	@ApiModelProperty(value = "Nome", required = true)
 	private String nome;
 
-	@ApiModelProperty(value = "Descrição")
+	@ApiModelProperty(value = "Descrição", required = true)
 	private String descricao;
 
-	@ApiModelProperty(value = "Data de criação")
+	@ApiModelProperty(value = "Data de criação", required = true)
+	@JsonFormat(shape = JsonFormat.Shape.STRING)
 	private Date dataCriacao;
 
-	@ApiModelProperty(value = "Prioridade")
+	@ApiModelProperty(value = "Prioridade", required = true)
 	private Prioridade prioridade;
 	
 	@ApiModelProperty(value = "Lista de erros", hidden = true)

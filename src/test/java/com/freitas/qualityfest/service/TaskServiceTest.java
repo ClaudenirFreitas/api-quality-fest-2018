@@ -102,6 +102,7 @@ public class TaskServiceTest {
 		try {
 
 			taskService.salvar(task);
+			Assert.fail("Não caiu na exception esperada");
 
 		} catch (PrioridadeAltaException ex) {
 
